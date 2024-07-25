@@ -1,8 +1,9 @@
 # -*- encoding=utf8 -*-
 from airtest.core.api import *
+import os
+import threading
+import multiprocessing.pool
 
-auto_setup(__file__)
-connect_device("Windows:///?title_re=百炼英雄")
 
 def reload():
     try:
@@ -15,19 +16,19 @@ def reload():
 
         # 等待一会，以防活动页面延迟弹出
         sleep(1)
-
     except:
         sleep(1)
-
     finally:
         time = 0
-        while time < 5 and not exists(Template(r"tpl1719452527348.png", target_pos=7, record_pos=(0.115, -0.225), resolution=(996, 1856))):
-            touch([525, 1800]) # 点击底部空白关闭页面
+        while time < 5 and not exists(
+                Template(r"tpl1719452527348.png", target_pos=7, record_pos=(0.115, -0.225), resolution=(996, 1856))):
+            touch([0.5, 0.8])  # 点击底部空白关闭页面
             sleep(1)
             time += 1
 
+
 def transport(place):
-    if exists(Template(r"tpl1718985018429.png", record_pos=(0.401, 0.667), resolution=(1248, 2266))): # 8’
+    if exists(Template(r"tpl1718985018429.png", record_pos=(0.401, 0.667), resolution=(1248, 2266))):  # 8’
         touch(Template(r"tpl1718985018429.png", record_pos=(0.401, 0.667), resolution=(1248, 2266)))
         wait(Template(r"tpl1719452527348.png", record_pos=(0.115, -0.225), resolution=(996, 1856)))
 
@@ -61,37 +62,39 @@ def transport(place):
 
     wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
 
-def fight_for_mines(): # 153 mines in 1'15"
+
+def fight_for_mines():  # 153 mines in 1'15"
     transport("北风营地")
-    swipe([525, 925], vector=[-0.038, 0.012], duration=5)
+    swipe([0.5, 0.8], vector=[-0.038, 0.012], duration=5)
     sleep(1)
-    swipe([525, 925], vector=[-0.014, -0.028], duration=0.8)
+    swipe([0.5, 0.8], vector=[-0.014, -0.028], duration=0.8)
     sleep(1)
-    swipe([525, 925], vector=[-0.014, -0.028], duration=1.8)
+    swipe([0.5, 0.8], vector=[-0.014, -0.028], duration=1.8)
     sleep(1)
-    swipe([525, 925], vector=[-0.01, 0.003], duration=2.5)
+    swipe([0.5, 0.8], vector=[-0.01, 0.003], duration=2.5)
     sleep(1)
-    swipe([525, 925], vector=[-0.035, -0.019], duration=2.8)
+    swipe([0.5, 0.8], vector=[-0.035, -0.019], duration=2.8)
     sleep(1)
-    swipe([525, 925], vector=[-0.03, 0.023], duration=2.2)
+    swipe([0.5, 0.8], vector=[-0.03, 0.023], duration=2.2)
     sleep(2)
-    swipe([525, 925], vector=[-0.03, 0.023], duration=1)
+    swipe([0.5, 0.8], vector=[-0.03, 0.023], duration=1)
     sleep(2)
-    swipe([525, 925], vector=[0.05, 0.005], duration=5.5)
+    swipe([0.5, 0.8], vector=[0.05, 0.005], duration=5.5)
     sleep(1.5)
-    swipe([525, 925], vector=[0.005, 0.05], duration=2)
+    swipe([0.5, 0.8], vector=[0.005, 0.05], duration=2)
     sleep(2)
 
-def fight_for_coins(): # $50 in 1‘56“
+
+def fight_for_coins():  # $50 in 1‘56“
     try:
         touch(Template(r"tpl1719452527348.png", target_pos=7, record_pos=(0.115, -0.225), resolution=(996, 1856)))
         touch(Template(r"tpl1719291686110.png", record_pos=(0.166, -0.228), resolution=(1000, 1863)))
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
-        swipe([525, 925], vector=[0.02, -0.02], duration=0.6)
-        swipe([525, 925], vector=[0, -0.05], duration=1)
-        sleep(1) # 独眼食人魔
-        swipe([525, 925], vector=[0, 0.05], duration=1)
-        swipe([525, 925], vector=[-0.02, 0.02], duration=0.6)
+        swipe([0.5, 0.8], vector=[1, 0.3], duration=0.6)
+        swipe([0.5, 0.8], vector=[0.5, 0], duration=1.5)
+        sleep(1)  # 独眼食人魔
+        swipe([0.5, 0.8], vector=[0.5, 1], duration=0.6)
+        swipe([0.5, 0.5], vector=[0, 1], duration=1.5)
 
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719316570625.png", record_pos=(-0.265, 0.043), resolution=(1000, 1863)))
@@ -102,27 +105,28 @@ def fight_for_coins(): # $50 in 1‘56“
         touch(Template(r"tpl1719293106569.png", record_pos=(-0.262, -0.202), resolution=(1002, 1865)))
         touch(Template(r"tpl1719293144468.png", record_pos=(0.165, -0.04), resolution=(1002, 1865)))
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
-        swipe([525, 925], vector=[0.09, -0.018], duration=1.5)
-        sleep(2) # 树精长老
-        swipe([525, 925], vector=[-0.09, 0.018], duration=1.5)
+        swipe([0.5, 0.8], vector=[1, 0.7], duration=1.8)
+        sleep(3)  # 树精长老
+        swipe([0.5, 0.5], vector=[0, 0.6], duration=2.0)
 
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719291958503.png", record_pos=(-0.263, -0.329), resolution=(1000, 1863)))
         touch(Template(r"tpl1719291989573.png", record_pos=(0.164, -0.42), resolution=(1000, 1863)))
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
-        swipe([525, 925], vector=[0.05, -0.01], duration=0.6)
-        sleep(1) # 树精领主
-        swipe([525, 925], vector=[-0.05, 0.01], duration=0.6)
+        swipe([0.5, 0.8], vector=[1, 0.75], duration=0.6)
+        sleep(1)  # 树精领主
+        swipe([0.5, 0.8], vector=[0, 0.85], duration=0.7)
 
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719292222638.png", record_pos=(0.163, -0.227), resolution=(1000, 1863)))
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
-        swipe([525, 925], vector=[-0.01, -0.07], duration=2.5)
-        swipe([525, 925], vector=[0.05, -0.05], duration=0.5)
-        swipe([525, 925], vector=[-0.023, -0.03], duration=2.1)
-        sleep(1.5) # 疯牛魔王
-        swipe([525, 925], vector=[-0.02, -0.032], duration=7)
-        sleep(1.5) # 火焰石像
+        swipe([0.5, 0.5], vector=[0.4, 0], duration=2.5)
+        swipe([0.5, 0.5], vector=[1, 0], duration=0.5)
+        swipe([0.5, 0.5], vector=[0.1, 0.1], duration=2.1)
+        sleep(1.5)  # 疯牛魔王
+        swipe([0.5, 0.8], vector=[0.1, 0.4], duration=1)
+        swipe([0.5, 0.8], vector=[0.5, 0], duration=5)
+        sleep(1.5)  # 火焰石像
 
         touch(Template(r"tpl1718985018429.png", record_pos=(0.401, 0.667), resolution=(1248, 2266)))
         wait(Template(r"tpl1719452527348.png", record_pos=(0.115, -0.225), resolution=(996, 1856)))
@@ -130,5 +134,33 @@ def fight_for_coins(): # $50 in 1‘56“
     except:
         reload()
 
-while True:
-    fight_for_coins()
+
+def watchdog():
+    print('Watchdog expired. Exiting...')
+    raise TimeoutError
+
+
+def test():
+    for i in range(5):
+        print(i)
+        sleep(1)
+
+
+def main():
+    auto_setup(__file__)
+    connect_device("Windows:///?title_re=百炼英雄")
+    sleep(10)
+    while True:
+        fight_for_coins()
+        # try:
+        #     with multiprocessing.pool.ThreadPool() as pool:
+        #         pool.apply_async(test).get(timeout=2)
+        # except multiprocessing.TimeoutError:
+        #     print('skip')
+        #     pass
+
+
+# do something if timeout
+
+if __name__ == '__main__':
+    main()
