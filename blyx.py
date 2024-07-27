@@ -3,6 +3,10 @@ from airtest.core.api import *
 import os
 import threading
 import multiprocessing.pool
+import signal
+import time
+import requests
+from WXPush import wxpush
 
 
 def reload():
@@ -94,7 +98,7 @@ def fight_for_coins():  # $50 in 1‘56“
         swipe([0.5, 0.8], vector=[0.5, 0], duration=1.5)
         sleep(1)  # 独眼食人魔
         swipe([0.5, 0.8], vector=[0.5, 1], duration=0.6)
-        swipe([0.5, 0.5], vector=[0, 1], duration=1.5)
+        swipe([0.5, 0.8], vector=[0.4, 0.9], duration=1.5)
 
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719316570625.png", record_pos=(-0.265, 0.043), resolution=(1000, 1863)))
@@ -107,7 +111,7 @@ def fight_for_coins():  # $50 in 1‘56“
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         swipe([0.5, 0.8], vector=[1, 0.7], duration=1.8)
         sleep(3)  # 树精长老
-        swipe([0.5, 0.5], vector=[0, 0.6], duration=2.0)
+        swipe([0.5, 0.8], vector=[0, 0.9], duration=2.0)
 
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719291958503.png", record_pos=(-0.263, -0.329), resolution=(1000, 1863)))
@@ -120,12 +124,12 @@ def fight_for_coins():  # $50 in 1‘56“
         touch(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
         touch(Template(r"tpl1719292222638.png", record_pos=(0.163, -0.227), resolution=(1000, 1863)))
         wait(Template(r"tpl1719136215820.png", record_pos=(0.077, -0.122), resolution=(1000, 1863)))
-        swipe([0.5, 0.5], vector=[0.4, 0], duration=2.5)
-        swipe([0.5, 0.5], vector=[1, 0], duration=0.5)
-        swipe([0.5, 0.5], vector=[0.1, 0.1], duration=2.1)
+        swipe([0.5, 0.8], vector=[0.4, 0.3], duration=2.5)
+        swipe([0.5, 0.8], vector=[0.6, 0.7], duration=0.5)
+        swipe([0.5, 0.8], vector=[0.4, 0.7], duration=2.1)
         sleep(1.5)  # 疯牛魔王
-        swipe([0.5, 0.8], vector=[0.1, 0.4], duration=1)
-        swipe([0.5, 0.8], vector=[0.5, 0], duration=5)
+        swipe([0.5, 0.8], vector=[0.4, 0.7], duration=1)
+        swipe([0.5, 0.8], vector=[0.5, 0.7], duration=4)
         sleep(1.5)  # 火焰石像
 
         touch(Template(r"tpl1718985018429.png", record_pos=(0.401, 0.667), resolution=(1248, 2266)))
@@ -140,24 +144,31 @@ def watchdog():
     raise TimeoutError
 
 
-def test():
-    for i in range(5):
-        print(i)
-        sleep(1)
+# 定义处理函数
+def handle_sigalrm(signum, frame):
+    print('Timeout!')
+    raise TimeoutError
+
 
 
 def main():
+    timeout = 2
     auto_setup(__file__)
     connect_device("Windows:///?title_re=百炼英雄")
     sleep(10)
     while True:
+    #     try:
+    #         signal.alarm(timeout)
+    #         for i in range(10):
+    #             # 循环体中的代码
+    #             print(f'Iteration {i}')
+    #             time.sleep(i)
+    #         signal.alarm(0)
+    # # 捕获SystemExit异常并正常退出
+    #     except TimeoutError:
+    #         wxpush()
         fight_for_coins()
-        # try:
-        #     with multiprocessing.pool.ThreadPool() as pool:
-        #         pool.apply_async(test).get(timeout=2)
-        # except multiprocessing.TimeoutError:
-        #     print('skip')
-        #     pass
+
 
 
 # do something if timeout
